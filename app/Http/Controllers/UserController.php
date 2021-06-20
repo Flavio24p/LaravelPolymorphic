@@ -26,12 +26,7 @@ class UserController extends Controller
         $user->email = $request->email;
         $user->save();
 
-        $user->tags()->detach($user->tags);
-
-        foreach ($request->tags as $tag)
-        {
-            $user->tags()->attach($tag);
-        }
+        $user->tags()->sync($request->tags);
 
         return back()->with("success", "User Updated Successfully");
     }

@@ -45,7 +45,7 @@
 
                                 <select name="tags[]" class="custom-select" multiple>
                                     @foreach($tags as $tag)
-                                        <option value="{{ $tag->id }}" {{ in_array($tag->id, $arrayOfCLientTags)  ? 'selected' : '' }}
+                                        <option value="{{ $tag->id }}" {{ in_array($tag->id, $arrayOfClientTags)  ? 'selected' : '' }}
                                         >{{ $tag->name }}</option>
                                     @endforeach
                                 </select>
