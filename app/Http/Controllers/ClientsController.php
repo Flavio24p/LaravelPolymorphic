@@ -46,10 +46,7 @@ class ClientsController extends Controller
         $client->surname = $request->surname;
         $client->save();
 
-        foreach ($request->tags as $tag)
-        {
-            $client->tags()->attach($tag);
-        }
+        $client->tags()->attach($request->tags);
 
         return redirect()->route('clients.index')->with('success', 'Client Created Successfully');
     }
@@ -73,9 +70,9 @@ class ClientsController extends Controller
 
         $tags = Tag::all();
 
-        $arrayOfCLientTags = $client->tags->pluck('id')->toArray();
+        $arrayOfClientTags = $client->tags->pluck('id')->toArray();
 
-        return view('clients.edit', compact('client', 'tags', 'arrayOfCLientTags'));
+        return view('clients.edit', compact('client', 'tags', 'arrayOfClientTags'));
     }
 
     /**
@@ -92,12 +89,7 @@ class ClientsController extends Controller
         $client->surname = $request->surname;
         $client->save();
 
-        $client->tags()->detach($client->tags);
-
-        foreach ($request->tags as $tag)
-        {
-            $client->tags()->attach($tag);
-        }
+        $client->tags()->sync($request->tags);
 
         return redirect()->route('clients.index')->with('success', 'Client Updated Successfully');
     }
@@ -110,7 +102,11 @@ class ClientsController extends Controller
      */
     public function destroy($id)
     {
-        Client::findOrFail($id)->delete();
+        $client = Client::findOrFail($id);
+
+        $client->tags()->detach($client->tags);
+
+        $client->delete();
 
         return back()->with('success', "Client Deleted Successfully");
     }
